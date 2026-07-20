@@ -512,12 +512,16 @@ class ZonneplanEnergySupplyCostsSensor(ZonneplanSensor):
         """Initialize the sensor."""
         super().__init__(connection_uuid, sensor_key, coordinator, install_index, description)
 
-        self.entity_id = f"sensor.zonneplan_{sensor_key}"
+        self.entity_id = f"sensor.zonneplan_today_{sensor_key.removesuffix('_today')}"
 
     @property
     def install_uuid(self) -> str:
         """Return install ID."""
         return self._connection_uuid
+
+    @property
+    def unique_id(self) -> str | None:
+        return f"{self.install_uuid}_energy_supply_costs_{self._sensor_key}"
 
     @property
     def device_info(self) -> DeviceInfo:
