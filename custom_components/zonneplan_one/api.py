@@ -94,6 +94,19 @@ class AsyncConfigEntryAuth(ZonneplanApi):
     async def async_get_consumer_prices(self, chart_name: str) -> dict | None:
         return await self._async_get(f"api/consumer-prices/charts/{chart_name}")
 
+    async def async_get_energy_supply_costs(
+        self,
+        organization_uuid: str,
+        address_id: str,
+        start_date: date,
+        end_date: date,
+    ) -> dict | None:
+        """Get energy supply costs for the given address and date range."""
+        return await self._async_get(
+            f"api/organizations/{organization_uuid}/addresses/{address_id}/energy-supply/costs"
+            f"?start_date={start_date.isoformat()}&end_date={end_date.isoformat()}"
+        )
+
     async def _async_get(self, path: str, *, ignore_etag: bool = False) -> dict | None:
         _LOGGER.info("fetch: %s", path)
 

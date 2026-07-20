@@ -38,6 +38,7 @@ GAS = "gas"
 GAS_PRICES = "gas_prices"
 ELECTRICITY = "electricity"
 ELECTRICITY_PRICES = "electricity_prices"
+ENERGY_SUPPLY_COSTS = "energy_supply_costs"
 PV_INSTALL = "pv_installation"
 P1_INSTALL = "p1_installation"
 P1_ELECTRICITY = "p1_electricity"
@@ -51,7 +52,7 @@ BATTERY_CHARTS = "battery_charts"
 NONE_IS_ZERO = "none-is-zero"
 NONE_USE_PREVIOUS = "none-is-previous"
 GAS_NEXT_PRICE_HOUR = 6
-VERSION = "2026.7.2"
+VERSION = "2026.7.3"
 
 
 @dataclass
@@ -125,6 +126,146 @@ SENSOR_TYPES: dict[
     str,
     dict[str, ZonneplanSensorEntityDescription] | dict[str, dict[str, ZonneplanSensorEntityDescription]],
 ] = {
+    ENERGY_SUPPLY_COSTS: {
+        "energy_total_costs_today": ZonneplanSensorEntityDescription(
+            key="total_costs.total_energy_costs.amount",
+            name="Consumption costs today",
+            translation_key="energy_total_costs_today",
+            native_unit_of_measurement=CURRENCY_EURO,
+            device_class=SensorDeviceClass.MONETARY,
+            value_factor=0.0000001,
+            none_value_behaviour=NONE_IS_ZERO,
+            entity_registry_enabled_default=True,
+            icon="mdi:cash",
+        ),
+        "energy_usage_costs_today": ZonneplanSensorEntityDescription(
+            key="total_costs.energy_usage_costs.amount",
+            name="Energy usage costs today",
+            translation_key="energy_usage_costs_today",
+            native_unit_of_measurement=CURRENCY_EURO,
+            device_class=SensorDeviceClass.MONETARY,
+            value_factor=0.0000001,
+            none_value_behaviour=NONE_IS_ZERO,
+            entity_registry_enabled_default=False,
+            icon="mdi:cash",
+        ),
+        "flextricity_costs_today": ZonneplanSensorEntityDescription(
+            key="total_costs.flextricity_costs.amount",
+            name="Flextricity costs today",
+            translation_key="flextricity_costs_today",
+            native_unit_of_measurement=CURRENCY_EURO,
+            device_class=SensorDeviceClass.MONETARY,
+            value_factor=0.0000001,
+            none_value_behaviour=NONE_IS_ZERO,
+            entity_registry_enabled_default=False,
+            icon="mdi:cash",
+        ),
+        "electricity_delivery_costs_today": ZonneplanSensorEntityDescription(
+            key="usage_costs.electricity_costs.delivery_costs.amount",
+            name="Electricity costs today",
+            translation_key="electricity_delivery_costs_today",
+            native_unit_of_measurement=CURRENCY_EURO,
+            device_class=SensorDeviceClass.MONETARY,
+            value_factor=0.0000001,
+            none_value_behaviour=NONE_IS_ZERO,
+            entity_registry_enabled_default=True,
+            icon="mdi:transmission-tower-export",
+        ),
+        "electricity_feed_in_costs_today": ZonneplanSensorEntityDescription(
+            key="usage_costs.electricity_costs.production_costs.amount",
+            name="Feed-in costs today",
+            translation_key="electricity_feed_in_costs_today",
+            native_unit_of_measurement=CURRENCY_EURO,
+            device_class=SensorDeviceClass.MONETARY,
+            value_factor=0.0000001,
+            none_value_behaviour=NONE_IS_ZERO,
+            entity_registry_enabled_default=True,
+            icon="mdi:transmission-tower-import",
+        ),
+        "grid_rewards_today": ZonneplanSensorEntityDescription(
+            key="asset_costs.aggregate.flex_costs.amount",
+            name="Grid rewards today",
+            translation_key="grid_rewards_today",
+            native_unit_of_measurement=CURRENCY_EURO,
+            device_class=SensorDeviceClass.MONETARY,
+            value_factor=0.0000001,
+            none_value_behaviour=NONE_IS_ZERO,
+            entity_registry_enabled_default=True,
+            icon="mdi:transmission-tower",
+        ),
+        "electricity_usage_costs_today": ZonneplanSensorEntityDescription(
+            key="usage_costs.electricity_costs.aggregate.electricity_usage_costs.amount",
+            name="Electricity usage costs today",
+            translation_key="electricity_usage_costs_today",
+            native_unit_of_measurement=CURRENCY_EURO,
+            device_class=SensorDeviceClass.MONETARY,
+            value_factor=0.0000001,
+            none_value_behaviour=NONE_IS_ZERO,
+            entity_registry_enabled_default=False,
+            icon="mdi:cash",
+        ),
+        "electricity_delivery_volume_today": ZonneplanSensorEntityDescription(
+            key="usage_costs.electricity_costs.delivery_volume.wh",
+            name="Electricity consumed today (billed)",
+            translation_key="electricity_delivery_volume_today",
+            native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+            device_class=SensorDeviceClass.ENERGY,
+            state_class=SensorStateClass.TOTAL,
+            value_factor=0.001,
+            suggested_display_precision=3,
+            none_value_behaviour=NONE_IS_ZERO,
+            entity_registry_enabled_default=True,
+            icon="mdi:flash",
+        ),
+        "electricity_feed_in_volume_today": ZonneplanSensorEntityDescription(
+            key="usage_costs.electricity_costs.production_volume.wh",
+            name="Electricity fed in today (billed)",
+            translation_key="electricity_feed_in_volume_today",
+            native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+            device_class=SensorDeviceClass.ENERGY,
+            state_class=SensorStateClass.TOTAL,
+            value_factor=0.001,
+            suggested_display_precision=3,
+            none_value_behaviour=NONE_IS_ZERO,
+            entity_registry_enabled_default=True,
+            icon="mdi:flash",
+        ),
+        "gas_delivery_volume_today": ZonneplanSensorEntityDescription(
+            key="usage_costs.gas_costs.gas_delivery_volume.dm3",
+            name="Gas consumed today (billed)",
+            translation_key="gas_delivery_volume_today",
+            native_unit_of_measurement=UnitOfVolume.CUBIC_METERS,
+            device_class=SensorDeviceClass.GAS,
+            state_class=SensorStateClass.TOTAL,
+            value_factor=0.001,
+            suggested_display_precision=3,
+            none_value_behaviour=NONE_IS_ZERO,
+            entity_registry_enabled_default=True,
+            icon="mdi:meter-gas",
+        ),
+        "gas_usage_costs_today": ZonneplanSensorEntityDescription(
+            key="usage_costs.gas_costs.aggregate.gas_usage_costs.amount",
+            name="Gas costs today",
+            translation_key="gas_usage_costs_today",
+            native_unit_of_measurement=CURRENCY_EURO,
+            device_class=SensorDeviceClass.MONETARY,
+            value_factor=0.0000001,
+            none_value_behaviour=NONE_IS_ZERO,
+            entity_registry_enabled_default=True,
+            icon="mdi:fire",
+        ),
+        "average_electricity_delivery_price_today": ZonneplanSensorEntityDescription(
+            key="usage_costs.electricity_costs.aggregate.average_delivery_costs_per_kwh.amount",
+            name="Average electricity delivery price today",
+            translation_key="average_electricity_delivery_price_today",
+            native_unit_of_measurement=f"{CURRENCY_EURO}/{UnitOfEnergy.KILO_WATT_HOUR}",
+            value_factor=0.0000001,
+            suggested_display_precision=4,
+            state_class=SensorStateClass.MEASUREMENT,
+            entity_registry_enabled_default=False,
+            icon="mdi:cash",
+        ),
+    },
     ELECTRICITY: {
         "usage": ZonneplanSensorEntityDescription(
             key="usage.value",
